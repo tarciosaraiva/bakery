@@ -1,0 +1,6 @@
+--bail
+--check-leaks
+--colors
+--inline-diffs
+--full-trace
+--require test/specHelper.js

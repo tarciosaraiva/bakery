@@ -1,0 +1,26 @@
+{
+  "name": "bakery",
+  "version": "1.0.0",
+  "description": "PH Bakery Coding Test",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "standard",
+    "test": "mocha --opts .mocha",
+    "test:ci": "npm t -- -w"
+  },
+  "author": "Tarcio <tarcio@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "sinon": "^3.2.1",
+    "sinon-chai": "^2.13.0"
+  },
+  "standard": {
+    "ignore": [
+      "/node_modules/"
+    ],
+    "globals": ["expect"],
+    "env": "mocha"
+  }
+}
