@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Vegemite scroll",
+    "code": "VS5",
+    "packs": {
+      "3": 6.99,
+      "5": 8.99
+    }
+  },
+  {
+    "name": "Blueberry muffin",
+    "code": "MB11",
+    "packs": {
+      "2": 9.95,
+      "5": 16.95,
+      "8": 24.95
+    }
+  },
+  {
+    "name": "Croissant",
+    "code": "CF",
+    "packs": {
+      "3": 5.95,
+      "5": 9.95,
+      "9": 16.99
+    }
+  }
+]
