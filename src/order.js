@@ -1,6 +1,6 @@
 module.exports = class Order {
   constructor (productCode, quantity) {
     this.code = productCode
-    this.quantity = quantity
+    this.quantity = parseInt(quantity, 10)
   }
 }

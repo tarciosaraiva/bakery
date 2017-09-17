@@ -29,7 +29,7 @@ describe('Shop', () => {
 
     it('produces an object with packs per order', () => {
       expect(result).to.eql([
-        { product: 'VS5', quantity: 10, packs: { '5': { quantity: 2, packPrice: 8.99} } },
+        { product: 'VS5', quantity: 10, packs: { '5': { quantity: 2, packPrice: 8.99 } } },
         { product: 'MB11', quantity: 14, packs: { '8': { quantity: 1, packPrice: 24.95 }, '2': { quantity: 3, packPrice: 9.95 } } },
         { product: 'CF', quantity: 13, packs: { '5': { quantity: 2, packPrice: 9.95 }, '3': { quantity: 1, packPrice: 5.95 } } }
       ])

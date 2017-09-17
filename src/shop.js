@@ -29,7 +29,7 @@ module.exports = {
    *
    * @param {any} availablePacks
    * @param {any} orderedPacks
-   * @returns  {object}
+   * @returns {object}
    */
   getPricedPacks (availablePacks, orderedPacks) {
     const pricedPacks = {}
