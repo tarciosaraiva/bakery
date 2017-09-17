@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "standard",
+    "start": "node index.js",
     "test": "mocha --opts .mocha",
     "test:ci": "npm t -- -w"
   },

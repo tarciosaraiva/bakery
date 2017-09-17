@@ -2,6 +2,9 @@
 
 > A bakery shop that sells packaged, yummy, fluffy produce.
 
+## To run
+Execute `npm start [ARG]` where `ARG` is one of the files present under `data`.
+
 ## Background
 
 A bakery used to base the price of their produce on an individual item cost. So if a customer ordered 10 cross buns then they would be charged 10x the cost of single bun.
