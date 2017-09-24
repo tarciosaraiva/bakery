@@ -1,33 +1,53 @@
 const fs = require('fs')
+const path = require('path')
 
-const shop = require('./shop')
 const Order = require('./order')
+const shop = require('./shop')
+
+const logErrorAndExit = (msg) => {
+  console.error(msg)
+  process.exit(1)
+}
 
 module.exports.run = (file) => {
   if (!file) {
-    console.error('You must supply an input file present under input_1.txt')
-    process.exit(1)
+    return logErrorAndExit('You must supply an input file present under "data" folder.')
   }
 
-  console.log(`Reading data/${file}\r`)
+  const dataFile = path.join(process.cwd(), 'data', file)
 
-  fs.readFile(`./data/${file}`, 'utf8', (err, data) => {
-    if (err) throw err
-    const orders = data.split('\n').map(entry => new Order(...entry.split(' ').reverse()))
-    const result = shop.processOrders(orders)
+  const promise = new Promise((resolve, reject) => {
+    fs.stat(dataFile, (err, data) => {
+      if (err) return reject(err.message)
 
-    result.forEach(r => {
-      const total = Object.keys(r.packs).map(p => {
-        return r.packs[p].packPrice * r.packs[p].quantity
-      }).reduce((a, b) => a + b, 0)
+      fs.readFile(dataFile, 'utf8', (err, data) => {
+        if (err) return reject(err.message)
 
-      console.log(`${r.quantity} ${r.product} $${total.toFixed(2)}`)
+        if (!data) return resolve('Nothing to process.')
 
-      Object.keys(r.packs).map(p => {
-        console.log(`\t${r.packs[p].quantity} x ${p} $${r.packs[p].packPrice}`)
+        const orders = data.split('\n').map(entry => new Order(...entry.split(' ').reverse()))
+        const result = shop.processOrders(orders)
+
+        if (!result.length) return resolve('No valid products to sell.')
+
+        const resultOutput = []
+
+        result.forEach(r => {
+          const total = Object.keys(r.packs)
+            .map(p => r.packs[p].packPrice * r.packs[p].quantity)
+            .reduce((a, b) => a + b, 0)
+
+          resultOutput.push(`${r.quantity} ${r.product} $${total.toFixed(2)}`)
+
+          Object.keys(r.packs).map(p => {
+            resultOutput.push(`\t${r.packs[p].quantity} x ${p} $${r.packs[p].packPrice}`)
+          })
+        })
+
+        resolve(resultOutput.join('\n\r'))
       })
-
-      console.log('\r')
     })
   })
+
+  Promise.resolve(promise.then(console.log).catch(logErrorAndExit))
 }
