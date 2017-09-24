@@ -9,45 +9,53 @@ const logErrorAndExit = (msg) => {
   process.exit(1)
 }
 
-module.exports.run = (file) => {
-  if (!file) {
-    return logErrorAndExit('You must supply an input file present under "data" folder.')
-  }
+module.exports = {
 
-  const dataFile = path.join(process.cwd(), 'data', file)
+  /**
+   * @description read input file and process it
+   * @param {any} file the file name to process
+   */
+  run (file) {
+    if (!file) {
+      return logErrorAndExit('You must supply an input file present under "data" folder.')
+    }
 
-  const promise = new Promise((resolve, reject) => {
-    fs.stat(dataFile, (err, data) => {
-      if (err) return reject(err.message)
+    const dataFile = path.join(process.cwd(), 'data', file)
 
-      fs.readFile(dataFile, 'utf8', (err, data) => {
+    const promise = new Promise((resolve, reject) => {
+      fs.stat(dataFile, (err, data) => {
         if (err) return reject(err.message)
 
-        if (!data) return resolve('Nothing to process.')
+        fs.readFile(dataFile, 'utf8', (err, data) => {
+          if (err) return reject(err.message)
 
-        const orders = data.split('\n').map(entry => new Order(...entry.split(' ').reverse()))
-        const result = shop.processOrders(orders)
+          if (!data) return resolve('Nothing to process.')
 
-        if (!result.length) return resolve('No valid products to sell.')
+          const orders = data.split('\n').map(entry => new Order(...entry.split(' ').reverse()))
+          const result = shop.processOrders(orders)
 
-        const resultOutput = []
+          if (!result.length) return resolve('No valid products to sell.')
 
-        result.forEach(r => {
-          const total = Object.keys(r.packs)
-            .map(p => r.packs[p].packPrice * r.packs[p].quantity)
-            .reduce((a, b) => a + b, 0)
+          const resultOutput = []
 
-          resultOutput.push(`${r.quantity} ${r.product} $${total.toFixed(2)}`)
+          result.forEach(r => {
+            const packs = Object.keys(r.packs)
+            const total = packs
+              .map(p => r.packs[p].packPrice * r.packs[p].quantity)
+              .reduce((a, b) => a + b, 0)
 
-          Object.keys(r.packs).map(p => {
-            resultOutput.push(`\t${r.packs[p].quantity} x ${p} $${r.packs[p].packPrice}`)
+            resultOutput.push(`${r.quantity} ${r.product} $${total.toFixed(2)}`)
+
+            packs.map(p => {
+              resultOutput.push(`\t${r.packs[p].quantity} x ${p} $${r.packs[p].packPrice}`)
+            })
           })
-        })
 
-        resolve(resultOutput.join('\n\r'))
+          resolve(resultOutput.join('\n\r'))
+        })
       })
     })
-  })
 
-  Promise.resolve(promise.then(console.log).catch(logErrorAndExit))
+    Promise.resolve(promise.then(console.log).catch(logErrorAndExit))
+  }
 }
